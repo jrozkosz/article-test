@@ -1,104 +1,531 @@
+body {
+    margin: 0;
+    display: flex;
+    height: 100vh;
+    font-family: 'Times New Roman', Times, serif;
+    color: #333;
+    overflow: hidden;
+    background: #fff;
+}
 
-    body { margin: 0; display: flex; height: 100vh; font-family: 'Times New Roman', Times, serif; color: #333; overflow: hidden; background: #fff; }
-    
-    /* Panel Główny */
-    .article-pane { flex: 65; padding: 50px 8%; overflow-y: auto; line-height: 1.6; font-size: 16px; scroll-behavior: smooth; position: relative; }
-    .article-pane img { max-width: 50%; height: auto; display: block; margin: 25px auto; }
-    
-    /* Typografia list i podpisów */
-    .figure-caption { text-align: center; font-size: 14px; color: #555; margin-top: -15px; margin-bottom: 30px; }
-    .subfigure-label { text-align: center; font-family: 'Times New Roman', Times, serif; font-size: 20px; font-weight: bold; margin-top: -10px; margin-bottom: 30px; color: #000; }
-    .table-caption { font-weight: bold; margin-bottom: 10px; color: #264b82; font-size: 15px; display: block; text-align: center; }
-    .table-caption + p { text-align: center; }
-    
-    .article-pane table { width: 100%; border-collapse: collapse; margin: 20px 0 40px 0; font-size: 14px; font-family: Arial, sans-serif; }
-    .article-pane th, .article-pane td { border: 1px solid #ccc; padding: 10px; text-align: left; }
-    .article-pane th { background-color: #f4f4f4; }
-    .article-pane h1, .article-pane h2, .article-pane h3 { margin-top: 1.5em; font-family: Arial, sans-serif; color: #264b82; }
-    
-    /* Style Front Matter */
-    .header-section { margin-bottom: 50px; border-bottom: 2px solid #264b82; padding-bottom: 30px; }
-    .vline { border-left: 2px solid #264b82; padding-left: 20px; margin-bottom: 30px; }
-    .title { font-size: 24px; font-weight: bold; margin-bottom: 20px; color: #264b82; font-family: Arial, sans-serif; }
-    .authors p { display: inline-block; margin-right: 15px; font-size: 16px; margin-bottom: 5px; }
-    .authors sup { color: #555; }
-    .correspondingauthor { font-size: 14px; margin: 0; }
-    .article-info-list { font-size: 13px; color: #444; margin-bottom: 0; padding-left: 0; list-style-position: inside; }
-    .article-info-box { font-size: 13px; color: #444; margin-bottom: 20px; background: #f9f9f9; padding: 15px; border-left: 4px solid #264b82; }
-    .article-info-box h2 { font-size: 16px; font-weight: bold; margin-top: 0; border-bottom: 1px solid #ddd; padding-bottom: 5px; color: #333; }
-    .article-info-box p { margin-bottom: 3px; }
-    .keywords { margin-top: 10px !important; }
-    .abstract-text { text-align: justify; line-height: 1.6; font-size: 15px; font-weight: bold; }
-    
-    /* Aktywne Linki, Nomenclature i Referencje */
-    a, a:link, a:visited { color: #264b82; text-decoration: none; }
-    a:hover { color: #A6CE39; text-decoration: underline; }
-    .ref-link, .fig-link { font-weight: bold; }
-    
-    .reference-item { margin-bottom: 12px; font-size: 14px; line-height: 1.6; text-align: justify; padding-left: 25px; text-indent: -25px; }
-    
-    /* Podświetlenia Referencji - bez border/padding żeby tekst nie "pływał" */
-    .ref-active { background-color: #cce5ff; transition: background-color 0.3s; border-radius: 3px; }
-    .active-ref { border-left-color: #264b82 !important; background-color: #f0f7ff !important; }
-    .active-item { border-left-color: #264b82 !important; background-color: #f0f7ff !important; }
-    
-    /* Podświetlenie na niebiesko przycisku "Focus" dla aktywnych elementów */
-    .active-ref .focus-btn, .active-item .focus-btn { color: #264b82 !important; }
+/* Panel Główny */
+.article-pane {
+    flex: 65;
+    padding: 50px 8%;
+    overflow-y: auto;
+    line-height: 1.6;
+    font-size: 16px;
+    scroll-behavior: smooth;
+    position: relative;
+}
 
-    .nomenclature-list { list-style: none; padding: 0; margin: 20px 0; }
-    .nom-item { display: flex; margin-bottom: 6px; font-size: 15px; border-bottom: 1px dashed #eee; padding-bottom: 5px; }
-    .nom-sym { flex: 0 0 120px; font-weight: bold; color: #264b82; }
-    .nom-desc { flex: 1; }
-    
-    /* Marker bezpośrednio przy tekście przylegający do prawej krawędzi okna */
-    .inline-marker {
-        position: absolute;
-        right: 10px;
-        width: 0;
-        height: 0;
-        border-top: 6px solid transparent;
-        border-bottom: 6px solid transparent;
-        border-right: 10px solid #264b82; /* strzałka w lewo */
-        transform: translateY(-50%);
-        pointer-events: none;
-        z-index: 100;
+.article-pane img {
+    max-width: 50%;
+    height: auto;
+    display: block;
+    margin: 25px auto;
+}
+
+/* Typografia list i podpisów */
+.figure-caption {
+    text-align: center;
+    font-size: 14px;
+    color: #555;
+    margin-top: -15px;
+    margin-bottom: 30px;
+}
+
+.subfigure-label {
+    text-align: center;
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 20px;
+    font-weight: bold;
+    margin-top: -10px;
+    margin-bottom: 30px;
+    color: #000;
+}
+
+.table-caption {
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #264b82;
+    font-size: 15px;
+    display: block;
+    text-align: center;
+}
+
+.table-caption+p {
+    text-align: center;
+}
+
+.article-pane table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0 40px 0;
+    font-size: 14px;
+    font-family: Arial, sans-serif;
+}
+
+.article-pane th,
+.article-pane td {
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: left;
+}
+
+.article-pane th {
+    background-color: #f4f4f4;
+}
+
+.article-pane h1,
+.article-pane h2,
+.article-pane h3 {
+    margin-top: 1.5em;
+    font-family: Arial, sans-serif;
+    color: #264b82;
+}
+
+/* Style Front Matter */
+.header-section {
+    margin-bottom: 50px;
+    border-bottom: 2px solid #264b82;
+    padding-bottom: 30px;
+}
+
+.vline {
+    border-left: 2px solid #264b82;
+    padding-left: 20px;
+    margin-bottom: 30px;
+}
+
+.title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #264b82;
+    font-family: Arial, sans-serif;
+}
+
+.authors p {
+    display: inline-block;
+    margin-right: 15px;
+    font-size: 16px;
+    margin-bottom: 5px;
+}
+
+.authors sup {
+    color: #555;
+}
+
+.correspondingauthor {
+    font-size: 14px;
+    margin: 0;
+}
+
+.article-info-list {
+    font-size: 13px;
+    color: #444;
+    margin-bottom: 0;
+    padding-left: 0;
+    list-style-position: inside;
+}
+
+.article-info-box {
+    font-size: 13px;
+    color: #444;
+    margin-bottom: 20px;
+    background: #f9f9f9;
+    padding: 15px;
+    border-left: 4px solid #264b82;
+}
+
+.article-info-box h2 {
+    font-size: 16px;
+    font-weight: bold;
+    margin-top: 0;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 5px;
+    color: #333;
+}
+
+.article-info-box p {
+    margin-bottom: 3px;
+}
+
+.keywords {
+    margin-top: 10px !important;
+}
+
+.abstract-text {
+    text-align: justify;
+    line-height: 1.6;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+/* Aktywne Linki, Nomenclature i Referencje */
+a,
+a:link,
+a:visited {
+    color: #3766BE;
+    text-decoration: none;
+}
+
+a:hover {
+    color: #A6CE39;
+    text-decoration: underline;
+}
+
+.ref-link,
+.fig-link {
+    font-weight: bold;
+}
+
+.reference-item {
+    margin-bottom: 12px;
+    font-size: 14px;
+    line-height: 1.6;
+    text-align: justify;
+    padding-left: 25px;
+    text-indent: -25px;
+}
+
+/* Podświetlenia Referencji - bez border/padding żeby tekst nie "pływał" */
+.ref-active {
+    background-color: #cce5ff;
+    transition: background-color 0.3s;
+    border-radius: 3px;
+}
+
+.active-ref {
+    border-left-color: #264b82 !important;
+    background-color: #f0f7ff !important;
+}
+
+.active-item {
+    border-left-color: #264b82 !important;
+    background-color: #f0f7ff !important;
+}
+
+/* Podświetlenie na niebiesko przycisku "Focus" dla aktywnych elementów */
+.active-ref .focus-btn,
+.active-item .focus-btn {
+    color: #264b82 !important;
+}
+
+.nomenclature-list {
+    list-style: none;
+    padding: 0;
+    margin: 20px 0;
+}
+
+.nom-item {
+    display: flex;
+    margin-bottom: 6px;
+    font-size: 15px;
+    border-bottom: 1px dashed #eee;
+    padding-bottom: 5px;
+}
+
+.nom-sym {
+    flex: 0 0 120px;
+    font-weight: bold;
+    color: #264b82;
+}
+
+.nom-desc {
+    flex: 1;
+}
+
+/* Marker bezpośrednio przy tekście przylegający do prawej krawędzi okna */
+.inline-marker {
+    position: absolute;
+    right: 10px;
+    width: 0;
+    height: 0;
+    border-top: 6px solid transparent;
+    border-bottom: 6px solid transparent;
+    border-right: 10px solid #264b82;
+    /* strzałka w lewo */
+    transform: translateY(-50%);
+    pointer-events: none;
+    z-index: 100;
+}
+
+/* Panel Boczny */
+.sidebar-pane {
+    flex: 35;
+    background: #ffffff;
+    border-left: 1px solid #dee2e6;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    font-family: Arial, sans-serif;
+}
+
+.tabs {
+    display: flex;
+    background: #fff;
+    border-bottom: 1px solid #dee2e6;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.tab-btn {
+    flex: 1;
+    padding: 15px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    color: #6c757d;
+    border-bottom: 3px solid transparent;
+}
+
+.tab-btn:hover {
+    background: #f1f3f5;
+    color: #333;
+}
+
+.tab-btn.active {
+    color: #264b82;
+    border-bottom-color: #264b82;
+    background: #fff;
+}
+
+.tab-content {
+    display: none;
+    font-size: 14px;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+#contents,
+#info {
+    padding: 25px;
+}
+
+#figures,
+#references {
+    padding: 0;
+}
+
+/* Zero padding by zachować efekt poziomych linii do krawędzi */
+
+.toc-link {
+    display: block;
+    padding: 8px 0;
+    color: #264b82;
+    text-decoration: none;
+    border-bottom: 1px solid #eee;
+}
+
+.toc-link:hover {
+    font-weight: bold;
+}
+
+.toc-h3 {
+    padding-left: 15px;
+    font-size: 13px;
+    color: #555;
+}
+
+/* Flat design z poziomymi liniami (zabezpieczone przed ucinaniem tekstu) */
+.sidebar-figure-wrapper {
+    padding: 20px 25px;
+    background: transparent;
+    border-bottom: 1px solid #dee2e6;
+    transition: background-color 0.2s;
+    border-left: 4px solid transparent;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    hyphens: auto;
+}
+
+.sidebar-figure-wrapper:last-child {
+    border-bottom: none;
+}
+
+.sidebar-figure-wrapper:hover {
+    background-color: #fcfcfc;
+}
+
+.focus-btn {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-weight: bold;
+    color: #6c757d;
+    transition: color 0.2s;
+    text-transform: none;
+}
+
+.focus-btn:hover {
+    color: #264b82;
+}
+
+.sidebar-figure-label {
+    color: #333;
+    font-size: 13px;
+    margin-bottom: 10px;
+    line-height: 1.4;
+    display: block;
+    text-align: justify;
+}
+
+.sidebar-figure-label strong,
+.sidebar-figure-label b {
+    color: #264b82;
+    display: block;
+    font-size: 14px;
+    margin-bottom: 4px;
+}
+
+/* Poprawa tabeli w bocznym panelu */
+.sidebar-table-preview {
+    font-size: 11px !important;
+    margin: 10px 0 !important;
+    width: 100% !important;
+    border-collapse: collapse;
+    pointer-events: none;
+}
+
+.sidebar-table-preview th,
+.sidebar-table-preview td {
+    border: 1px solid #ccc;
+    padding: 4px;
+    text-align: left;
+    word-break: break-word;
+}
+
+.sidebar-table-preview th {
+    background-color: #f4f4f4;
+}
+
+/* Modal do zdjęć */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    max-width: 90%;
+    max-height: 90%;
+    object-fit: contain;
+    cursor: zoom-out;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+}
+
+.modal-close {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    color: #fff;
+    font-size: 40px;
+    font-weight: bold;
+    cursor: pointer;
+    z-index: 10000;
+    transition: 0.3s;
+}
+
+.modal-close:hover,
+.modal-close:focus {
+    color: #bbb;
+    text-decoration: none;
+}
+
+/* Mobile Sidebar Toggle */
+.sidebar-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    transition: opacity 0.3s;
+}
+
+.sidebar-toggle-btn {
+    display: none;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1002;
+    background: #264b82;
+    color: #fff;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 50px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    align-items: center;
+    gap: 8px;
+}
+
+.sidebar-toggle-btn:hover {
+    background: #1e3b66;
+}
+
+@media (max-width: 768px) {
+    .article-pane {
+        flex: 100%;
+        padding: 30px 5%;
     }
-    
-    /* Panel Boczny */
-    .sidebar-pane { flex: 35; background: #ffffff; border-left: 1px solid #dee2e6; display: flex; flex-direction: column; overflow-y: auto; font-family: Arial, sans-serif; }
-    .tabs { display: flex; background: #fff; border-bottom: 1px solid #dee2e6; position: sticky; top: 0; z-index: 10; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
-    .tab-btn { flex: 1; padding: 15px; border: none; background: none; cursor: pointer; font-size: 14px; font-weight: bold; color: #6c757d; border-bottom: 3px solid transparent; }
-    .tab-btn:hover { background: #f1f3f5; color: #333; }
-    .tab-btn.active { color: #264b82; border-bottom-color: #264b82; background: #fff; }
-    
-    .tab-content { display: none; font-size: 14px; }
-    .tab-content.active { display: block; }
-    #contents, #info { padding: 25px; }
-    #figures, #references { padding: 0; } /* Zero padding by zachować efekt poziomych linii do krawędzi */
-    
-    .toc-link { display: block; padding: 8px 0; color: #264b82; text-decoration: none; border-bottom: 1px solid #eee; }
-    .toc-link:hover { font-weight: bold; }
-    .toc-h3 { padding-left: 15px; font-size: 13px; color: #555; }
-    
-    /* Flat design z poziomymi liniami (zabezpieczone przed ucinaniem tekstu) */
-    .sidebar-figure-wrapper { padding: 20px 25px; background: transparent; border-bottom: 1px solid #dee2e6; transition: background-color 0.2s; border-left: 4px solid transparent; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word; hyphens: auto; }
-    .sidebar-figure-wrapper:last-child { border-bottom: none; }
-    .sidebar-figure-wrapper:hover { background-color: #fcfcfc; }
-    
-    .focus-btn { cursor: pointer; display: flex; align-items: center; gap: 5px; font-weight: bold; color: #6c757d; transition: color 0.2s; text-transform: none; }
-    .focus-btn:hover { color: #264b82; }
-    
-    .sidebar-figure-label { color: #333; font-size: 13px; margin-bottom: 10px; line-height: 1.4; display: block; text-align: justify; }
-    .sidebar-figure-label strong, .sidebar-figure-label b { color: #264b82; display: block; font-size: 14px; margin-bottom: 4px; }
-    
-    /* Poprawa tabeli w bocznym panelu */
-    .sidebar-table-preview { font-size: 11px !important; margin: 10px 0 !important; width: 100% !important; border-collapse: collapse; pointer-events: none; }
-    .sidebar-table-preview th, .sidebar-table-preview td { border: 1px solid #ccc; padding: 4px; text-align: left; word-break: break-word; }
-    .sidebar-table-preview th { background-color: #f4f4f4; }
-    
-    /* Modal do zdjęć */
-    .modal { display: none; position: fixed; z-index: 9999; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.8); justify-content: center; align-items: center; }
-    .modal-content { max-width: 90%; max-height: 90%; object-fit: contain; cursor: zoom-out; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
-    .modal-close { position: absolute; top: 20px; right: 30px; color: #fff; font-size: 40px; font-weight: bold; cursor: pointer; z-index: 10000; transition: 0.3s; }
-    .modal-close:hover, .modal-close:focus { color: #bbb; text-decoration: none; }
-    
+
+    .sidebar-pane {
+        position: fixed;
+        right: -100%;
+        top: 0;
+        width: 85%;
+        max-width: 400px;
+        height: 100%;
+        z-index: 1001;
+        transition: right 0.3s ease;
+        box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .sidebar-pane.open {
+        right: 0;
+    }
+
+    .sidebar-overlay.open {
+        display: block;
+        opacity: 1;
+    }
+
+    .sidebar-toggle-btn {
+        display: flex;
+    }
+
+    .tabs {
+        flex-wrap: wrap;
+    }
+
+    .tab-btn {
+        padding: 10px;
+        font-size: 13px;
+    }
+
+    #scroll-markers {
+        display: none;
+    }
+}
