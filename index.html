@@ -483,7 +483,8 @@
             <table>
                 <thead>
                     <tr>
-                        <th colspan="2"><strong>Designation</strong></th>
+                        <th><strong>Designation</strong></th>
+                        <th></th>
                         <th><strong>LED A</strong></th>
                         <th><strong>LED B</strong></th>
                         <th><strong>LED C</strong></th>
@@ -491,19 +492,21 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td rowspan="3">Thermal resistance,<br><i>Rth<sub>j-c</sub></i> [°C/W]</td>
+                        <td></td>
                         <td><i>I<sub>F</sub></i>= 350mA</td>
                         <td>8.6</td>
                         <td>13.5</td>
                         <td>13.6</td>
                     </tr>
                     <tr>
-                        <td><i>I<sub>F</sub></i>= 700mA</td>
+                        <td>Thermal resistance,<br><i>Rth<sub>j-c</sub></i> [°C/W]</td>
+                        <td><br><i>I<sub>F</sub></i>= 700mA</td>
                         <td>8.6</td>
                         <td>14.1</td>
                         <td>21.2</td>
                     </tr>
                     <tr>
+                        <td></td>
                         <td><i>I<sub>F</sub></i>= 1050mA</td>
                         <td>8.8</td>
                         <td>17.1</td>
@@ -1981,6 +1984,31 @@
             evt.currentTarget.classList.add('active');
         }
 
+        // ZOPTYMALIZOWANA FUNKCJA PRZEWIJANIA (Bulletproof mobile scroll)
+        function smoothScrollToCenter(target) {
+            const pane = document.getElementById('main-article');
+            const targetRect = target.getBoundingClientRect();
+            const paneRect = pane.getBoundingClientRect();
+
+            // Obliczamy precyzyjny offset względem obecnej pozycji
+            const offset = targetRect.top - paneRect.top - (pane.clientHeight / 2) + (targetRect.height / 2);
+
+            pane.scrollBy({
+                top: offset,
+                behavior: 'smooth'
+            });
+
+            // Efekt podświetlenia po przewinięciu
+            target.style.transition = "background-color 0.5s, border-radius 0.5s";
+            const oldBg = target.style.backgroundColor || "transparent";
+            target.style.backgroundColor = "#e7f1ff";
+            target.style.borderRadius = "5px";
+            setTimeout(() => {
+                target.style.backgroundColor = oldBg;
+                target.style.borderRadius = "0";
+            }, 1500);
+        }
+
         // Logika Toggle dla Referencji (Tylko po kliknięciu Focus)
         function toggleRef(refNum) {
             const card = document.getElementById('sidebar-ref-card-' + refNum);
@@ -1993,7 +2021,6 @@
             // Zawsze czyścimy markery strzałek na początku
             document.querySelectorAll('.inline-marker').forEach(el => el.remove());
 
-            // Sprawdzamy, czy panel boczny jest otwarty i zamykamy go przed scrollem
             const wasSidebarOpen = document.querySelector('.sidebar-pane').classList.contains('open');
             closeMobileSidebar();
 
@@ -2001,7 +2028,6 @@
             if (!isActive) {
                 card.classList.add('active-ref');
 
-                // Odnajdowanie wszystkich odniesień w tekście
                 const searchStr = ',' + refNum + ',';
                 const inlineCitations = Array.from(document.querySelectorAll('.citation-inline')).filter(el => {
                     return el.getAttribute('data-refs').indexOf(searchStr) !== -1;
@@ -2012,8 +2038,6 @@
 
                 inlineCitations.forEach(el => {
                     el.classList.add('ref-active');
-
-                    // Rysowanie strzałki bezpośrednio w treści
                     const elTopOffset = el.getBoundingClientRect().top - paneTop + pane.scrollTop;
                     const marker = document.createElement('div');
                     marker.className = 'inline-marker';
@@ -2021,13 +2045,12 @@
                     pane.appendChild(marker);
                 });
 
-                // Przewijanie okna z opóźnieniem, aby panel na smartfonie zdążył zniknąć
                 setTimeout(() => {
                     if (inlineCitations.length > 0) {
-                        inlineCitations[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        smoothScrollToCenter(inlineCitations[0]);
                     } else {
                         const biblioItem = document.getElementById('ref-' + refNum);
-                        if (biblioItem) biblioItem.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        if (biblioItem) smoothScrollToCenter(biblioItem);
                     }
                 }, wasSidebarOpen ? 350 : 50);
             }
@@ -2093,15 +2116,7 @@
                         wrapper.classList.add('active-item');
 
                         setTimeout(() => {
-                            caption.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                            caption.style.transition = "background-color 0.5s, border-radius 0.5s";
-                            const oldBg = caption.style.backgroundColor || "transparent";
-                            caption.style.backgroundColor = "#e7f1ff";
-                            caption.style.borderRadius = "5px";
-                            setTimeout(() => {
-                                caption.style.backgroundColor = oldBg;
-                                caption.style.borderRadius = "0";
-                            }, 1500);
+                            smoothScrollToCenter(caption);
                         }, wasSidebarOpen ? 350 : 50);
                     }
                 };
@@ -2193,7 +2208,7 @@
             });
         }
 
-        // Płynne przewijanie dla WSZYSTKICH linków wewnętrznych (usunięto :not(.ref-link))
+        // Płynne przewijanie dla WSZYSTKICH linków wewnętrznych
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 const targetId = this.getAttribute('href').substring(1);
@@ -2205,15 +2220,7 @@
                     closeMobileSidebar();
 
                     setTimeout(() => {
-                        target.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                        target.style.transition = "background-color 0.5s, border-radius 0.5s";
-                        const oldBg = target.style.backgroundColor || "transparent";
-                        target.style.backgroundColor = "#e7f1ff";
-                        target.style.borderRadius = "5px";
-                        setTimeout(() => {
-                            target.style.backgroundColor = oldBg;
-                            target.style.borderRadius = "0";
-                        }, 1500);
+                        smoothScrollToCenter(target);
                     }, wasSidebarOpen ? 350 : 50);
                 }
             });
