@@ -2019,14 +2019,18 @@
                 });
 
                 // Przewijanie okna po lewej stronie
-                if (inlineCitations.length > 0) {
-                    inlineCitations[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
-                } else {
-                    const biblioItem = document.getElementById('ref-' + refNum);
-                    if (biblioItem) biblioItem.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                }
+                closeMobileSidebar();
+                setTimeout(() => {
+                    if (inlineCitations.length > 0) {
+                        inlineCitations[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    } else {
+                        const biblioItem = document.getElementById('ref-' + refNum);
+                        if (biblioItem) biblioItem.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                }, 150);
+            } else {
+                closeMobileSidebar();
             }
-            closeMobileSidebar();
         }
 
         // Dynamiczne generowanie Spisu Treści (Contents)
@@ -2086,17 +2090,21 @@
 
                     if (!isActive) {
                         wrapper.classList.add('active-item');
-                        caption.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                        caption.style.transition = "background-color 0.5s, border-radius 0.5s";
-                        const oldBg = caption.style.backgroundColor;
-                        caption.style.backgroundColor = "#e7f1ff";
-                        caption.style.borderRadius = "5px";
+                        closeMobileSidebar();
                         setTimeout(() => {
-                            caption.style.backgroundColor = oldBg;
-                            caption.style.borderRadius = "0";
-                        }, 1500);
+                            caption.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            caption.style.transition = "background-color 0.5s, border-radius 0.5s";
+                            const oldBg = caption.style.backgroundColor;
+                            caption.style.backgroundColor = "#e7f1ff";
+                            caption.style.borderRadius = "5px";
+                            setTimeout(() => {
+                                caption.style.backgroundColor = oldBg;
+                                caption.style.borderRadius = "0";
+                            }, 1500);
+                        }, 150);
+                    } else {
+                        closeMobileSidebar();
                     }
-                    closeMobileSidebar();
                 };
 
                 headerDiv.appendChild(typeSpan);
@@ -2195,18 +2203,20 @@
                 const target = document.getElementById(targetId);
                 if (target) {
                     e.preventDefault();
-                    target.scrollIntoView({ behavior: 'smooth', block: 'center' });
-
-                    target.style.transition = "background-color 0.5s, border-radius 0.5s";
-                    const oldBg = target.style.backgroundColor;
-                    target.style.backgroundColor = "#e7f1ff";
-                    target.style.borderRadius = "5px";
+                    closeMobileSidebar();
                     setTimeout(() => {
-                        target.style.backgroundColor = oldBg;
-                        target.style.borderRadius = "0";
-                    }, 1500);
+                        target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+                        target.style.transition = "background-color 0.5s, border-radius 0.5s";
+                        const oldBg = target.style.backgroundColor;
+                        target.style.backgroundColor = "#e7f1ff";
+                        target.style.borderRadius = "5px";
+                        setTimeout(() => {
+                            target.style.backgroundColor = oldBg;
+                            target.style.borderRadius = "0";
+                        }, 1500);
+                    }, 150);
                 }
-                closeMobileSidebar();
             });
         });
 

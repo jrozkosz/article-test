@@ -485,10 +485,27 @@ a:hover {
     background: #1e3b66;
 }
 
+/* Breakpoints for Images */
+@media (max-width: 1200px) {
+    .article-pane img {
+        max-width: 65%;
+    }
+}
+
+@media (max-width: 1024px) {
+    .article-pane img {
+        max-width: 75%;
+    }
+}
+
 @media (max-width: 768px) {
     .article-pane {
         flex: 100%;
         padding: 30px 5%;
+    }
+
+    .article-pane img {
+        max-width: 85%;
     }
 
     .sidebar-pane {
