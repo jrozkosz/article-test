@@ -1993,11 +1993,15 @@
             // Zawsze czyścimy markery strzałek na początku
             document.querySelectorAll('.inline-marker').forEach(el => el.remove());
 
+            // Sprawdzamy, czy panel boczny jest otwarty i zamykamy go przed scrollem
+            const wasSidebarOpen = document.querySelector('.sidebar-pane').classList.contains('open');
+            closeMobileSidebar();
+
             // Jeśli kliknęliśmy na nieaktywny element - podświetlmy go
             if (!isActive) {
                 card.classList.add('active-ref');
 
-                // Odnajdowanie wszystkich odniesień w tekście (np. pojedynczych lub schowanych w [1-3])
+                // Odnajdowanie wszystkich odniesień w tekście
                 const searchStr = ',' + refNum + ',';
                 const inlineCitations = Array.from(document.querySelectorAll('.citation-inline')).filter(el => {
                     return el.getAttribute('data-refs').indexOf(searchStr) !== -1;
@@ -2009,17 +2013,15 @@
                 inlineCitations.forEach(el => {
                     el.classList.add('ref-active');
 
-                    // Rysowanie strzałki bezpośrednio w treści (position: absolute wewnątrz .article-pane)
+                    // Rysowanie strzałki bezpośrednio w treści
                     const elTopOffset = el.getBoundingClientRect().top - paneTop + pane.scrollTop;
-
                     const marker = document.createElement('div');
                     marker.className = 'inline-marker';
                     marker.style.top = (elTopOffset + (el.offsetHeight / 2)) + 'px';
                     pane.appendChild(marker);
                 });
 
-                // Przewijanie okna po lewej stronie
-                closeMobileSidebar();
+                // Przewijanie okna z opóźnieniem, aby panel na smartfonie zdążył zniknąć
                 setTimeout(() => {
                     if (inlineCitations.length > 0) {
                         inlineCitations[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -2027,9 +2029,7 @@
                         const biblioItem = document.getElementById('ref-' + refNum);
                         if (biblioItem) biblioItem.scrollIntoView({ behavior: 'smooth', block: 'center' });
                     }
-                }, 150);
-            } else {
-                closeMobileSidebar();
+                }, wasSidebarOpen ? 350 : 50);
             }
         }
 
@@ -2084,26 +2084,25 @@
 
                 focusBtn.onclick = () => {
                     const isActive = wrapper.classList.contains('active-item');
-
-                    // Wygaszamy inne wybrane figury
                     document.querySelectorAll('.active-item').forEach(el => el.classList.remove('active-item'));
+
+                    const wasSidebarOpen = document.querySelector('.sidebar-pane').classList.contains('open');
+                    closeMobileSidebar();
 
                     if (!isActive) {
                         wrapper.classList.add('active-item');
-                        closeMobileSidebar();
+
                         setTimeout(() => {
                             caption.scrollIntoView({ behavior: 'smooth', block: 'center' });
                             caption.style.transition = "background-color 0.5s, border-radius 0.5s";
-                            const oldBg = caption.style.backgroundColor;
+                            const oldBg = caption.style.backgroundColor || "transparent";
                             caption.style.backgroundColor = "#e7f1ff";
                             caption.style.borderRadius = "5px";
                             setTimeout(() => {
                                 caption.style.backgroundColor = oldBg;
                                 caption.style.borderRadius = "0";
                             }, 1500);
-                        }, 150);
-                    } else {
-                        closeMobileSidebar();
+                        }, wasSidebarOpen ? 350 : 50);
                     }
                 };
 
@@ -2149,7 +2148,6 @@
                 } else {
                     let items = [];
                     let curr = caption.previousElementSibling;
-                    // Skrypt przestaje zbierać zdjęcia, gdy natrafi na akapit pełniący rolę "bariery tekstu"
                     while (curr) {
                         if (curr.classList && curr.classList.contains('figure-caption')) break;
                         if (curr.tagName && curr.tagName.match(/^H[1-6]$/)) break;
@@ -2180,7 +2178,6 @@
                             clonedEl.style.height = "auto";
                             clonedEl.style.border = "none";
                         } else {
-                            // Odpowiednie formatowanie dla literki pobranej do sidebaru
                             clonedEl.style.marginTop = "5px";
                             clonedEl.style.marginBottom = "15px";
                         }
@@ -2196,26 +2193,28 @@
             });
         }
 
-        // Płynne przewijanie i podświetlanie pozostałych linków w tekście (nieobjętych funkcją toggleRef)
-        document.querySelectorAll('a[href^="#"]:not(.ref-link)').forEach(anchor => {
+        // Płynne przewijanie dla WSZYSTKICH linków wewnętrznych (usunięto :not(.ref-link))
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 const targetId = this.getAttribute('href').substring(1);
                 const target = document.getElementById(targetId);
                 if (target) {
                     e.preventDefault();
+
+                    const wasSidebarOpen = document.querySelector('.sidebar-pane').classList.contains('open');
                     closeMobileSidebar();
+
                     setTimeout(() => {
                         target.scrollIntoView({ behavior: 'smooth', block: 'center' });
-
                         target.style.transition = "background-color 0.5s, border-radius 0.5s";
-                        const oldBg = target.style.backgroundColor;
+                        const oldBg = target.style.backgroundColor || "transparent";
                         target.style.backgroundColor = "#e7f1ff";
                         target.style.borderRadius = "5px";
                         setTimeout(() => {
                             target.style.backgroundColor = oldBg;
                             target.style.borderRadius = "0";
                         }, 1500);
-                    }, 150);
+                    }, wasSidebarOpen ? 350 : 50);
                 }
             });
         });
